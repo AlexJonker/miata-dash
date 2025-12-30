@@ -1,0 +1,70 @@
+name: Build Image
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v5
+
+      - name: Read config.json
+        id: config
+        run: |
+          VERSION=$(jq -r '.version' config.json)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Build base image
+        uses: Nature40/pimod@master
+        with:
+          pifile: image.Pifile
+
+      # - name: Mount image
+      #   run: |
+      #     sudo mkdir /mnt/image
+      #     sudo losetup -Pf image.img
+      #     LOOP=$(losetup -a | grep image.img | cut -d: -f1)
+      #     sudo mount ${LOOP}p2 /mnt/image
+      #     echo "LOOP=$LOOP" >> $GITHUB_ENV
+
+      # - name: Install packages from config.json
+      #   run: |
+      #     PACKAGES=$(jq -r '.packages[]' config.json)
+      #     sudo chroot /mnt/image apt-get install $PACKAGES
+
+      # - name: Create default user
+      #   run: |
+      #     sudo chroot /mnt/image addgroup -S driver || true
+      #     sudo chroot /mnt/image adduser -S -D -G driver driver || true
+
+      # - name: Copy files and set ownership from config.json
+      #   run: |
+      #     jq -c '.files[]' config.json | while read entry; do
+      #       SRC=$(echo "$entry" | jq -r '.source')
+      #       DEST=$(echo "$entry" | jq -r '.target')
+      #       OWNER=$(echo "$entry" | jq -r '.owner // empty')
+
+      #       sudo mkdir -p "/mnt/image$(dirname "$DEST")"
+
+      #       if [ -d "$SRC" ]; then
+      #         sudo cp -r "$SRC/." "/mnt/image$DEST"
+      #       else
+      #         sudo cp "$SRC" "/mnt/image$DEST"
+      #       fi
+
+      #       if [ -n "$OWNER" ]; then
+      #         sudo chroot /mnt/image chown -R "$OWNER" "$DEST"
+      #       fi
+      #     done
+
+      - name: Rename image
+        run: mv image.img image-${{ steps.config.outputs.version }}.img
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-${{ steps.config.outputs.version }}
+          path: image-${{ steps.config.outputs.version }}.img
