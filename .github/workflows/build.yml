@@ -29,7 +29,6 @@ jobs:
       - name: Build image
         run: |
           cd buildroot
-          export FORCE_UNSAFE_CONFIGURE=1
           make -j$(nproc)
 
       - name: Upload image
