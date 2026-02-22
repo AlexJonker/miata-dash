@@ -2,8 +2,7 @@ name: Build Raspberry Pi 3 Image
 
 on:
   push:
-    branches: [main]
-  pull_request:
+    branches: [ main ]
 
 jobs:
   build-image:
@@ -15,7 +14,7 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install build dependencies
+      - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -25,14 +24,14 @@ jobs:
       - name: Configure Buildroot
         run: |
           cd buildroot
-          make BR2_EXTERNAL=../external BR2_DEFCONFIG=../configs/rpi3_defconfig defconfig
+          make BR2_DEFCONFIG=../configs/rpi3_defconfig defconfig
 
-      - name: Build Buildroot
+      - name: Build image
         run: |
           cd buildroot
           make -j$(nproc)
 
-      - name: Upload SD card image artifact
+      - name: Upload image
         uses: actions/upload-artifact@v6
         with:
           name: rpi3-image
