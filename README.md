@@ -23,11 +23,15 @@
 git clone https://github.com/AlexJonker/car-thing
 cd car-thing
 ```
-2. Compile the program and build the image with
+2. Update submodules with
+```bash
+git submodule update --init
+```
+3. Compile the program and build the image with
 ```bash
 ./build.sh
 ```
-3. Flash the file with raspberry pi imager or with
+4. Flash the file with raspberry pi imager or with
 ```bash
 ./flash.sh
 ```
