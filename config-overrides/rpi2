@@ -1,1 +1,3 @@
 BR2_ROOTFS_OVERLAY="../src"
+BR2_TARGET_GENERIC_HOSTNAME="car"
+BR2_TARGET_GENERIC_ISSUE="Welcome to your very speedy racecar!"
