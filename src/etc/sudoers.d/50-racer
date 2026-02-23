@@ -1,0 +1,1 @@
+racer ALL=(ALL) NOPASSWD: /sbin/poweroff, /sbin/reboot
