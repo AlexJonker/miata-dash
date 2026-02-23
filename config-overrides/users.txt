@@ -1,0 +1,2 @@
+# username uid group gid password home shell groups comment
+racer 1000 racer 1000 =racer /home/racer /bin/sh - The default user
