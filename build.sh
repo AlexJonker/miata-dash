@@ -2,10 +2,17 @@
 set -e
 
 cd buildroot
-git clean -fdX
+echo "Cleaning old configs"
+rm -f .config
+rm -f .config.old
+rm -f ..config.tmp
 
+echo "Configuring Buildroot for Raspberry Pi 2"
 make raspberrypi2_defconfig
 cat ../config-overrides/rpi2 >> .config
 make olddefconfig
 
-make -j$(($(nproc) - 2))
+echo "Building image (this may take a while)"
+make -j$(nproc)
+
+echo "Build complete! The image is located at buildroot/output/images/sdcard.img"
