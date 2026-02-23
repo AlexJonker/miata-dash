@@ -1,3 +1,9 @@
-BR2_ROOTFS_OVERLAY="../src"
-BR2_TARGET_GENERIC_HOSTNAME="car"
-BR2_TARGET_GENERIC_ISSUE="Welcome to your very speedy racecar!"
+BR2_ROOTFS_OVERLAY="../src" # Copy files from src to the root of the image.
+BR2_TARGET_ROOTFS_CREATE_HOME="y" # Create the /home folder itself.
+
+BR2_TARGET_GENERIC_HOSTNAME="car" # The hostname.
+BR2_TARGET_GENERIC_ISSUE="Welcome to your very speedy racecar!" # The message that shows before all the logs when booting.
+
+BR2_TARGET_ROOTFS_DEFAULT_LOGIN_USER="racer" # The default user.
+BR2_TARGET_ROOTFS_DEFAULT_LOGIN_PASSWD="racer" # The default password for the user.
+BR2_TARGET_ROOTFS_CREATE_HOME_DIR="y" # Create /home/racer for the user.
