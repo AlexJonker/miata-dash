@@ -1,4 +1,4 @@
-name: Build Raspberry Pi 3 Image
+name: Build Raspberry Pi Image
 
 on:
   push:
@@ -24,7 +24,7 @@ jobs:
       - name: Configure Buildroot
         run: |
           cd buildroot
-          make BR2_DEFCONFIG=../configs/rpi3_defconfig defconfig
+          make raspberrypi2_defconfig
 
       - name: Build image
         run: |
@@ -34,5 +34,5 @@ jobs:
       - name: Upload image
         uses: actions/upload-artifact@v6
         with:
-          name: rpi3-image
-          path: buildroot/output/images/*
+          name: rpi2-image.img
+          path: buildroot/output/images/sdcard.img
