@@ -1,0 +1,111 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version (e.g. 1.2.3 or v1.2.3)"
+        required: true
+
+env:
+  APP_VERSION: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version || github.ref_name }}
+
+jobs:
+  rpi2:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential git wget cpio unzip rsync bc \
+            python3 file bison flex libssl-dev
+
+      - name: Configure rpi2 Buildroot
+        run: |
+          cd buildroot
+
+          make raspberrypi2_defconfig
+
+          cat ../config-overrides/rpi2 >> .config
+
+          make olddefconfig
+
+      - name: Build rpi2 image
+        run: |
+          cd buildroot
+          make -j$(nproc)
+
+      - name: Upload image
+        uses: actions/upload-artifact@v6
+        with:
+          name: rpi2-image
+          path: buildroot/output/images/sdcard.img
+
+  rpi3:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential git wget cpio unzip rsync bc \
+            python3 file bison flex libssl-dev
+
+      - name: Configure rpi3 Buildroot
+        run: |
+          cd buildroot
+
+          make raspberrypi3_defconfig
+
+          cat ../config-overrides/rpi3 >> .config
+
+          make olddefconfig
+
+      - name: Build rpi3 image
+        run: |
+          cd buildroot
+          make -j$(nproc)
+
+      - name: Upload image
+        uses: actions/upload-artifact@v6
+        with:
+          name: rpi3-image
+          path: buildroot/output/images/sdcard.img
+
+  release:
+    name: Create GitHub Release
+    needs: [rpi2, rpi3]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: "main"
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v7
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ startsWith(env.APP_VERSION, 'v') && env.APP_VERSION || format('v{0}', env.APP_VERSION) }}
+          name: ${{ startsWith(env.APP_VERSION, 'v') && env.APP_VERSION || format('v{0}', env.APP_VERSION) }}
+          generate_release_notes: true
+          files: |
+            rpi2-image/sdcard.img
+            rpi3-image/sdcard.img
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
