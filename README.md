@@ -12,10 +12,9 @@
 
 ## Installation
 
-### Option 1: download and flash (recommended )
+### Option 1: download and flash (recommended)
 1. Download the latest image from [the release page](https://github.com/AlexJonker/car-thing/releases/latest)
-2. Unzip the downloaded zip file
-3. Flash the unzipped file with raspberry pi imager.
+2. Flash the downloaded file with raspberry pi imager.
 
 ### Option 2: compile and flash (linux)
 1. Clone this repo with
