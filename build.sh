@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-cd buildroot
+cd modules/buildroot
 
 echo "Configuring Buildroot for Raspberry Pi 2"
 make raspberrypi2_defconfig
@@ -11,7 +11,7 @@ make olddefconfig
 echo "Building image (this may take a while)"
 make -j$(nproc)
 
-echo "Build complete! The image is located at buildroot/output/images/sdcard.img"
+echo "Build complete! The image is located at modules/buildroot/output/images/sdcard.img"
 
 
 echo ""

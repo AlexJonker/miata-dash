@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-IMAGE_PATH="buildroot/output/images/sdcard.img"
+IMAGE_PATH="modules/buildroot/output/images/sdcard.img"
 
 if [ ! -f "$IMAGE_PATH" ]; then
     echo "Error: Image file not found, did you run build.sh?"

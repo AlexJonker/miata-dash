@@ -33,24 +33,24 @@ jobs:
 
       - name: Configure rpi2 Buildroot
         run: |
-          cd buildroot
+          cd modules/buildroot
 
           make raspberrypi2_defconfig
 
-          cat ../config-overrides/rpi2 >> .config
+          cat ../../config-overrides/rpi2 >> .config
 
           make olddefconfig
 
       - name: Build rpi2 image
         run: |
-          cd buildroot
+          cd modules/buildroot
           make -j$(nproc)
 
       - name: Upload image
         uses: actions/upload-artifact@v6
         with:
           name: rpi2-image
-          path: buildroot/output/images/sdcard.img
+          path: modules/buildroot/output/images/sdcard.img
 
   rpi3:
     runs-on: ubuntu-latest
@@ -70,24 +70,24 @@ jobs:
 
       - name: Configure rpi3 Buildroot
         run: |
-          cd buildroot
+          cd modules/buildroot
 
           make raspberrypi3_defconfig
 
-          cat ../config-overrides/rpi3 >> .config
+          cat ../../config-overrides/rpi3 >> .config
 
           make olddefconfig
 
       - name: Build rpi3 image
         run: |
-          cd buildroot
+          cd modules/buildroot
           make -j$(nproc)
 
       - name: Upload image
         uses: actions/upload-artifact@v6
         with:
           name: rpi3-image
-          path: buildroot/output/images/sdcard.img
+          path: modules/buildroot/output/images/sdcard.img
 
   release:
     name: Create GitHub Release

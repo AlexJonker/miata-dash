@@ -1,9 +1,9 @@
 [submodule "buildroot"]
-	path = buildroot
+	path = modules/buildroot
 	url = https://github.com/buildroot/buildroot.git
 [submodule "aasdk"]
-	path = aasdk
+	path = modules/aasdk
 	url = https://github.com/AlexJonker/aasdk
 [submodule "openauto"]
-	path = openauto
+	path = modules/openauto
 	url = https://github.com/AlexJonker/openauto
