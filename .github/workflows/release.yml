@@ -7,8 +7,12 @@ on:
         description: "Version (e.g. 1.2.3 or v1.2.3)"
         required: true
 
+permissions:
+  contents: write
+  actions: read
+
 env:
-  APP_VERSION: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version || github.ref_name }}
+  VERSION: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version || github.ref_name }}
 
 jobs:
   rpi2:
@@ -98,14 +102,19 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v7
 
+      - name: Prepare release assets
+        run: |
+          mkdir -p release-assets
+          cp rpi2-image/sdcard.img release-assets/rpi2-sdcard.img
+          cp rpi3-image/sdcard.img release-assets/rpi3-sdcard.img
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ startsWith(env.APP_VERSION, 'v') && env.APP_VERSION || format('v{0}', env.APP_VERSION) }}
-          name: ${{ startsWith(env.APP_VERSION, 'v') && env.APP_VERSION || format('v{0}', env.APP_VERSION) }}
+          tag_name: ${{ startsWith(env.VERSION, 'v') && env.VERSION || format('v{0}', env.VERSION) }}
+          name: ${{ startsWith(env.VERSION, 'v') && env.VERSION || format('v{0}', env.VERSION) }}
           generate_release_notes: true
+          overwrite_files: true
           files: |
-            rpi2-image/sdcard.img
-            rpi3-image/sdcard.img
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            release-assets/rpi2-sdcard.img
+            release-assets/rpi3-sdcard.img
