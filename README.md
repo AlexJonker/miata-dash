@@ -36,3 +36,11 @@ Use `rpi2` if you are building for a Raspberry Pi 2.
 ```bash
 ./flash.sh
 ```
+
+## Repo explanation
+- The current repo is only for the install scripts and buildroot for creating the pi image.
+
+### In the modules folder are git submodules to other repos explained below:
+- buildroot - This is the buildroot repo, used to create the pi images.
+- aasdk/openauto - These are forks from f1xpl's openauto and aasdk. These are for the android auto integration.
+- dash - This is the rust-based dashboard shell. So the bottom bar and menus.
