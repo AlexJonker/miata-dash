@@ -1,9 +1,0 @@
-BR2_ROOTFS_OVERLAY="../../src" # Copy files from src to the root of the image.
-
-BR2_TARGET_GENERIC_HOSTNAME="car" # The hostname.
-BR2_TARGET_GENERIC_ISSUE="Welcome to your very speedy racecar!" # The message that shows before all the logs when booting.
-
-BR2_TARGET_GENERIC_ROOT_PASSWD="racer" # The root password.
-
-BR2_ROOTFS_USERS_TABLES="../../config-overrides/users.txt" # The fule for other users.
-BR2_PACKAGE_SUDO=y # Install sudo.
