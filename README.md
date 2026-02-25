@@ -26,10 +26,12 @@ cd miata-dash
 ```bash
 git submodule update --init
 ```
-3. Compile the program and build the image with
+3. Compile the program and build the image for your device with
 ```bash
-./build.sh
+./build.sh rpi3
 ```
+Use `rpi2` if you are building for a Raspberry Pi 2.
+
 4. Flash the file with raspberry pi imager or with
 ```bash
 ./flash.sh
