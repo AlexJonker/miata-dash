@@ -7,3 +7,6 @@
 [submodule "openauto"]
 	path = modules/openauto
 	url = https://github.com/AlexJonker/openauto
+[submodule "modules/dash"]
+	path = modules/dash
+	url = https://github.com/AlexJonker/dash
