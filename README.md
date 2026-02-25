@@ -24,7 +24,7 @@ cd miata-dash
 ```
 2. Update submodules with
 ```bash
-git submodule update --init
+git submodule update --init --recursive
 ```
 3. Compile the program and build the image for your device with
 ```bash
