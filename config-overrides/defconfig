@@ -12,6 +12,9 @@ BR2_PACKAGE_SUDO=y # Install sudo.
 BR2_PACKAGE_NEOFETCH=y
 BR2_PACKAGE_HTOP=y
 
+# -- Fix qemu ---
+BR2_TARGET_ROOTFS_EXT2_SIZE="128M"
+
 
 # --- Some pi stuff ---
 BR2_LINUX_KERNEL=y
