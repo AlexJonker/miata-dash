@@ -1,0 +1,25 @@
+# See http://buildroot.org/manual.html#rootfs-custom
+# and http://elinux.org/RPiconfig for a description of config.txt syntax
+
+start_file=start.elf
+fixup_file=fixup.dat
+
+kernel=zImage
+
+# To use an external initramfs file
+#initramfs rootfs.cpio.gz
+
+# Disable overscan assuming the display supports displaying the full resolution
+# If the text shown on the screen disappears off the edge, comment this out
+disable_overscan=1
+
+# VC4 GPU driver for X11 (or Wayland) acceleration
+#dtoverlay=vc4-fkms-v3d
+
+# Give some GPU memory
+gpu_mem_256=128
+gpu_mem_512=128
+gpu_mem_1024=128
+
+# Optional: HDMI safe mode if your display is acting up
+#hdmi_safe=1
