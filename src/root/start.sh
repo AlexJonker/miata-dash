@@ -1,3 +1,5 @@
 #!/bin/sh
 
-xinit /usr/bin/matchbox-window-manager -- :0
+Xorg :0 &
+export DISPLAY=:0
+matchbox-session

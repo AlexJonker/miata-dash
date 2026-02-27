@@ -13,8 +13,7 @@ kernel=zImage
 # If the text shown on the screen disappears off the edge, comment this out
 disable_overscan=1
 
-# VC4 GPU driver for X11 (or Wayland) acceleration
-#dtoverlay=vc4-fkms-v3d
+dtoverlay=vc4-kms-v3d
 
 # Give some GPU memory
 gpu_mem_256=128
