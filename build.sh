@@ -10,9 +10,12 @@ case "$TARGET_DEVICE" in
     rpi3)
         DEFCONFIG="raspberrypi3_defconfig"
         ;;
+    rpi4)
+        DEFCONFIG="raspberrypi4_defconfig"
+        ;;
     *)
-        echo "Error: Unsupported target '$TARGET_DEVICE'. Use 'rpi2' or 'rpi3'."
-        echo "Usage: ./build.sh [rpi2|rpi3]"
+        echo "Error: Unsupported target '$TARGET_DEVICE'. Use 'rpi2', 'rpi3', or 'rpi4'."
+        echo "Usage: ./build.sh [rpi2|rpi3|rpi4]"
         exit 1
         ;;
 esac
