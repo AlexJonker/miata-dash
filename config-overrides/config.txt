@@ -13,12 +13,18 @@ kernel=zImage
 # If the text shown on the screen disappears off the edge, comment this out
 disable_overscan=1
 
-dtoverlay=vc4-kms-v3d
-
 # Give some GPU memory
-gpu_mem_256=128
-gpu_mem_512=128
-gpu_mem_1024=128
+gpu_mem=128
 
-# Optional: HDMI safe mode if your display is acting up
-#hdmi_safe=1
+
+
+[pi4]
+dtoverlay=miniuart-bt
+start_file=start4.elf
+fixup_file=fixup4.dat
+
+[pi3]
+dtoverlay=miniuart-bt
+
+[pi2]
+dtoverlay=vc4-kms-v3d
