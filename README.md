@@ -37,8 +37,8 @@ Use `rpi2` if you are building for a Raspberry Pi 2.
 ./flash.sh
 ```
 
-## Information
-The desktop is running weston with the rust-based shell.
+<!-- ## Information
+The desktop is running weston with the rust-based shell. -->
 
 ## Repo explanation
 - The current repo is only for the install scripts and buildroot for creating the pi image.
