@@ -15,42 +15,25 @@ env:
   VERSION: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version || github.ref_name }}
 
 jobs:
-  rpi2:
-    runs-on: ubuntu-latest
+  # rpi2:
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v6
-        with:
-          submodules: recursive
+  #   steps:
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v6
+  #       with:
+  #         submodules: recursive
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            build-essential git wget cpio unzip rsync bc \
-            python3 file bison flex libssl-dev
+  #     - name: Run pimod rpi2
+  #       uses: Nature40/pimod@master
+  #       with:
+  #         pifile: examples/RPi-OpenWRT.Pifile
 
-      - name: Configure rpi2 Buildroot
-        run: |
-          cd modules/buildroot
-
-          make raspberrypi2_defconfig
-
-          cat ../../config-overrides/rpi2 >> .config
-
-          make olddefconfig
-
-      - name: Build rpi2 image
-        run: |
-          cd modules/buildroot
-          make -j$(nproc)
-
-      - name: Upload image
-        uses: actions/upload-artifact@v6
-        with:
-          name: rpi2-image
-          path: modules/buildroot/output/images/sdcard.img
+  #     - name: Upload image
+  #       uses: actions/upload-artifact@v6
+  #       with:
+  #         name: rpi2-image
+  #         path: modules/buildroot/output/images/sdcard.img
 
   rpi3:
     runs-on: ubuntu-latest
@@ -61,27 +44,15 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install dependencies
+      - name: Run pimod rpi3
+        uses: Nature40/pimod@master
+        with:
+          pifile: Pifile
+
+      - name: List files
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            build-essential git wget cpio unzip rsync bc \
-            python3 file bison flex libssl-dev
-
-      - name: Configure rpi3 Buildroot
-        run: |
-          cd modules/buildroot
-
-          make raspberrypi3_defconfig
-
-          cat ../../config-overrides/rpi3 >> .config
-
-          make olddefconfig
-
-      - name: Build rpi3 image
-        run: |
-          cd modules/buildroot
-          make -j$(nproc)
+          echo "==== ROOT ===="
+          ls -R
 
       - name: Upload image
         uses: actions/upload-artifact@v6
@@ -91,7 +62,8 @@ jobs:
 
   release:
     name: Create GitHub Release
-    needs: [rpi2, rpi3]
+    # needs: [rpi2, rpi3]
+    needs: [rpi3]
     runs-on: ubuntu-latest
 
     steps:
@@ -105,7 +77,6 @@ jobs:
       - name: Prepare release assets
         run: |
           mkdir -p release-assets
-          cp rpi2-image/sdcard.img release-assets/rpi2-sdcard.img
           cp rpi3-image/sdcard.img release-assets/rpi3-sdcard.img
 
       - name: Create GitHub Release
@@ -116,5 +87,4 @@ jobs:
           generate_release_notes: true
           overwrite_files: true
           files: |
-            release-assets/rpi2-sdcard.img
             release-assets/rpi3-sdcard.img
