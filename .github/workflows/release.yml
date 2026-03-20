@@ -15,27 +15,7 @@ env:
   VERSION: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version || github.ref_name }}
 
 jobs:
-  # rpi2:
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #     - name: Checkout repo
-  #       uses: actions/checkout@v6
-  #       with:
-  #         submodules: recursive
-
-  #     - name: Run pimod rpi2
-  #       uses: Nature40/pimod@master
-  #       with:
-  #         pifile: examples/RPi-OpenWRT.Pifile
-
-  #     - name: Upload image
-  #       uses: actions/upload-artifact@v6
-  #       with:
-  #         name: rpi2-image
-  #         path: modules/buildroot/output/images/sdcard.img
-
-  rpi3:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -44,26 +24,20 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Run pimod rpi3
+      - name: Run pimod builder
         uses: Nature40/pimod@master
         with:
           pifile: Pifile
 
-      - name: List files
-        run: |
-          echo "==== ROOT ===="
-          ls -R
-
       - name: Upload image
         uses: actions/upload-artifact@v6
         with:
-          name: rpi3-image
-          path: modules/buildroot/output/images/sdcard.img
+          name: image
+          path: image.img
 
   release:
     name: Create GitHub Release
-    # needs: [rpi2, rpi3]
-    needs: [rpi3]
+    needs: [build]
     runs-on: ubuntu-latest
 
     steps:
@@ -74,10 +48,9 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v7
 
-      - name: Prepare release assets
+      - name: List files
         run: |
-          mkdir -p release-assets
-          cp rpi3-image/sdcard.img release-assets/rpi3-sdcard.img
+          ls -R
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -87,4 +60,4 @@ jobs:
           generate_release_notes: true
           overwrite_files: true
           files: |
-            release-assets/rpi3-sdcard.img
+            image.img
