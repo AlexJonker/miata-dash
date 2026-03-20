@@ -29,11 +29,14 @@ jobs:
         with:
           pifile: Pifile
 
+      - name: Compress image
+        run: xz -T0 -c image.img > image.img.xz
+
       - name: Upload image
         uses: actions/upload-artifact@v6
         with:
           name: image
-          path: image.img
+          path: image.img.xz
 
   release:
     name: Create GitHub Release
@@ -48,10 +51,6 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v7
 
-      - name: List files
-        run: |
-          ls -R
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -60,4 +59,4 @@ jobs:
           generate_release_notes: true
           overwrite_files: true
           files: |
-            image.img
+            image.img.xz
