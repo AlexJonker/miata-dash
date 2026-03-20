@@ -1,6 +1,3 @@
-[submodule "buildroot"]
-	path = modules/buildroot
-	url = https://github.com/buildroot/buildroot.git
 [submodule "aasdk"]
 	path = modules/aasdk
 	url = https://github.com/AlexJonker/aasdk
