@@ -2,8 +2,10 @@ FROM https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_ar
 TO image.img
 PUMP 1000M
 
-# RUN apt-get update
-# RUN apt-get upgrade -y
+RUN apt-get update
+RUN apt-get upgrade -y
+RUN apt-get autoremove --purge -y
+RUN apt-get clean
 
 INSTALL src/ / # Move all files in src to the image.
 
