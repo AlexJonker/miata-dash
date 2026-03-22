@@ -35,9 +35,9 @@ git submodule update --init --recursive
 ```bash
 ./flash.sh
 ```
-
-<!-- ## Information
-The desktop is running weston with the rust-based shell. -->
+## Information
+The default password and username is both `car`
+<!--The desktop is running weston with the rust-based shell. -->
 
 ## Repo explanation
 - The current repo is only for the install scripts and buildroot for creating the pi image.
