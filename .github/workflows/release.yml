@@ -29,10 +29,18 @@ jobs:
         with:
           pifile: Pifile
 
+      - name: Copy image locally
+        if: ${{ env.ACT }}
+        run: |
+          mkdir -p /workspace/output
+          cp image.img /workspace/output/image.img
+
       - name: Compress image
+        if: ${{ !env.ACT }}
         run: xz -T0 -c image.img > image.img.xz
 
       - name: Upload image
+        if: ${{ !env.ACT }}
         uses: actions/upload-artifact@v6
         with:
           name: image

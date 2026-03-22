@@ -1,4 +1,0 @@
-# Allow usage of sudo on all commands
-racer ALL=(ALL) ALL
-# Don't require password for poweroff and reboot
-racer ALL=(ALL) NOPASSWD: /sbin/poweroff, /sbin/reboot
