@@ -16,7 +16,7 @@
 1. Download the latest image from [the release page](https://github.com/AlexJonker/miata-dash/releases/latest)
 2. Flash the downloaded file with raspberry pi imager.
 
-### Option 2: compile and flash (linux)
+### Option 2: build it yourself
 1. Clone this repo with
 ```bash
 git clone https://github.com/AlexJonker/miata-dash
@@ -28,9 +28,8 @@ git submodule update --init --recursive
 ```
 3. Compile the program and build the image for your device with
 ```bash
-./build.sh rpi3
+./build.sh
 ```
-Use `rpi2` if you are building for a Raspberry Pi 2.
 
 4. Flash the file with raspberry pi imager or with
 ```bash
@@ -44,6 +43,5 @@ The desktop is running weston with the rust-based shell. -->
 - The current repo is only for the install scripts and buildroot for creating the pi image.
 
 ### In the modules folder are git submodules to other repos explained below:
-- buildroot - This is the buildroot repo, used to create the pi images.
 - aasdk/openauto - These are forks from f1xpl's openauto and aasdk. These are for the android auto integration.
 - dash - This is the rust-based dashboard shell. So the bottom bar and menus.
