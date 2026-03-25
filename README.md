@@ -22,26 +22,15 @@
 git clone https://github.com/AlexJonker/miata-dash
 cd miata-dash
 ```
-2. Update submodules with
-```bash
-git submodule update --init --recursive
-```
-3. Compile the program and build the image for your device with
+2. Compile the program and build the image for your device with
 ```bash
 ./build.sh
 ```
 
-4. Flash the file with raspberry pi imager or with
+3. Flash the file with raspberry pi imager or with
 ```bash
 ./flash.sh
 ```
 ## Information
 The default password and username is both `car`
 <!--The desktop is running weston with the rust-based shell. -->
-
-## Repo explanation
-- The current repo is only for the install scripts and buildroot for creating the pi image.
-
-### In the modules folder are git submodules to other repos explained below:
-- aasdk/openauto - These are forks from f1xpl's openauto and aasdk. These are for the android auto integration.
-- dash - This is the rust-based dashboard shell. So the bottom bar and menus.
