@@ -28,7 +28,8 @@ RUN apt-get install -y --no-install-recommends \
     libxcomposite1 \
     libgl1 \
     libegl1 \
-    libxkbcommon-x11-0
+    libxkbcommon-x11-0 \
+    openbox
 
 # Build deps
 RUN apt-get install rustup git -y --no-install-recommends
