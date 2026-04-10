@@ -35,9 +35,11 @@ RUN apt-get install -y --no-install-recommends \
 RUN apt-get install rustup git -y --no-install-recommends
 
 # Disable the setup tui
-RUN systemctl disable cloud-config
-RUN systemctl disable userconfig
-RUN systemctl disable cloud-final
+# RUN systemctl disable userconfig.service
+RUN systemctl disable cloud-config.service
+RUN systemctl disable cloud-final.service
+RUN systemctl disable cloud-init-local.service
+RUN systemctl disable cloud-init.service
 
 # Setup users
 RUN sh -c '
