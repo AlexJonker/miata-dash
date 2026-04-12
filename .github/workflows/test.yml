@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Create custom stage
         run: |
@@ -41,7 +41,7 @@ jobs:
           apt-proxy: ""
 
           # Compression to apply on final image (either "none", "zip", "xz" or "gz").
-          compression: zip
+          compression: xz
 
           # Compression level to be used. From 0 to 9 (refer to the tool man page for more
           # information on this. Usually 0 is no compression but very fast, up to 9 with the
