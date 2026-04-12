@@ -182,7 +182,6 @@ jobs:
         with:
           tag_name: ${{ startsWith(env.VERSION, 'v') && env.VERSION || format('v{0}', env.VERSION) }}
           name: ${{ startsWith(env.VERSION, 'v') && env.VERSION || format('v{0}', env.VERSION) }}
-          generate_release_notes: true
           overwrite_files: true
           files: |
             image*.img.xz
