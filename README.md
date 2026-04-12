@@ -11,26 +11,9 @@
 
 
 ## Installation
-
-### Option 1: download and flash (recommended)
 1. Download the latest image from [the release page](https://github.com/AlexJonker/miata-dash/releases/latest)
 2. Flash the downloaded file with raspberry pi imager.
 
-### Option 2: build it yourself
-1. Clone this repo with
-```bash
-git clone https://github.com/AlexJonker/miata-dash
-cd miata-dash
-```
-2. Compile the program and build the image for your device with
-```bash
-./build.sh
-```
-
-3. Flash the file with raspberry pi imager or with
-```bash
-./flash.sh
-```
 ## Information
 Root password is `root`
 
