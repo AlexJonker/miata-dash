@@ -32,5 +32,6 @@ cd miata-dash
 ./flash.sh
 ```
 ## Information
-The default password and username is both `car`
-<!--The desktop is running weston with the rust-based shell. -->
+Root password is `root`
+
+User is called `driver` and password is `driver`
