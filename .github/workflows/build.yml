@@ -1,0 +1,157 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version (e.g. 1.2.3 or v1.2.3)"
+        required: true
+
+permissions:
+  contents: write
+  actions: read
+
+env:
+  VERSION: ${{ github.event.inputs.version }}
+
+jobs:
+  compile:
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - name: Checkout dash
+        uses: actions/checkout@v6
+        with:
+          repository: alexjonker/dash
+          path: dash
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libasound2-dev
+
+      - name: Build dashboard
+        run: |
+          cd dash
+          cargo build --release
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v7
+        with:
+          name: dash-binary
+          path: dash/target/release/dash
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [compile]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Download binary
+        uses: actions/download-artifact@v7
+        with:
+          name: dash-binary
+
+      - name: Create custom stage
+        run: |
+          mkdir -p custom-stage/01-customization/files/usr/local/bin
+
+          cp -r ./src/. custom-stage/01-customization/files/
+          cp dash custom-stage/01-customization/files/usr/local/bin/dash
+
+          cat > custom-stage/01-customization/00-run.sh <<-'EOF'
+          #!/bin/bash -e
+          cp -rp files/* "${ROOTFS_DIR}/"
+          EOF
+
+          cat > custom-stage/01-customization/00-run-chroot.sh <<-'EOF'
+          #!/bin/bash -e
+          apt-get update
+          apt-get install -y --no-install-recommends \
+              xserver-xorg xinit x11-xserver-utils libxkbcommon-x11-0 openbox \
+              xserver-xorg-input-evdev xserver-xorg-input-libinput
+
+          chmod +x /usr/local/bin/dash
+          echo "root:root" | chpasswd
+          EOF
+
+          cat > custom-stage/prerun.sh <<-'EOF'
+          #!/bin/bash -e
+          if [ ! -d "${ROOTFS_DIR}" ]; then
+            copy_previous
+          fi
+          EOF
+
+          chmod +x custom-stage/prerun.sh
+          chmod +x custom-stage/01-customization/00-run.sh
+          chmod +x custom-stage/01-customization/00-run-chroot.sh
+
+      - uses: usimd/pi-gen-action@v1
+        id: build
+        with:
+          apt-proxy: ""
+          compression: xz
+          compression-level: 6
+          disable-first-boot-user-rename: 1
+          docker-opts: ""
+          enable-cloud-init: 0
+          enable-noobs: false
+          enable-ssh: 1
+          export-last-stage-only: true
+          extra-host-dependencies: ""
+          extra-host-modules: ""
+          github-token: ${{ github.token }}
+          hostname: miata
+          image-name: "miata"
+          increase-runner-disk-size: true
+          keyboard-keymap: us
+          keyboard-layout: English (US)
+          locale: en_US.UTF-8
+          password: "driver"
+          pi-gen-dir: pi-gen
+          pi-gen-release: Raspberry Pi reference
+          pi-gen-repository: RPi-Distro/pi-gen
+          pi-gen-version: 2025-12-04-raspios-trixie-arm64
+          pubkey-only-ssh: 0
+          pubkey-ssh-first-user: ""
+          release: trixie
+          setfcap: ""
+          stage-list: stage0 stage1 stage2 ./custom-stage
+          temp-repo: ""
+          timezone: Europe/Brussels
+          username: driver
+          verbose-output: false
+          wpa-country: ""
+          wpa-essid: ""
+          wpa-password: ""
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: miata-image
+          path: ${{ steps.build.outputs.image-path }}
+
+  # release:
+  #   name: Create GitHub Release
+  #   needs: [build]
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - uses: actions/checkout@v6
+  #       with:
+  #         ref: "main"
+
+  #     - uses: actions/download-artifact@v7
+  #       with:
+  #         name: miata-image
+
+  #     - name: Create GitHub Release
+  #       uses: softprops/action-gh-release@v2
+  #       with:
+  #         tag_name: ${{ startsWith(env.VERSION, 'v') && env.VERSION || format('v{0}', env.VERSION) }}
+  #         name: ${{ startsWith(env.VERSION, 'v') && env.VERSION || format('v{0}', env.VERSION) }}
+  #         generate_release_notes: true
+  #         overwrite_files: true
+  #         files: |
+  #           image.img.xz
