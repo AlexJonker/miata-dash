@@ -91,6 +91,9 @@ jobs:
 
           cp -r ./src/. custom-stage/01-customization/files/
           cp dash-arm64 custom-stage/01-customization/files/usr/local/bin/dash
+
+          mkdir -p /storage/music
+          chown -R driver:driver /storage
           chown -R driver:driver /home/driver
 
           cat > custom-stage/01-customization/00-run.sh <<-'EOF'
