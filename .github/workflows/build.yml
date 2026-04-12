@@ -104,7 +104,7 @@ jobs:
           extra-host-modules: ""
           github-token: ${{ github.token }}
           hostname: miata
-          image-name: "miata"
+          image-name: "miata-dash-${{ env.VERSION }}-arm64"
           increase-runner-disk-size: true
           keyboard-keymap: us
           keyboard-layout: English (US)
@@ -132,26 +132,26 @@ jobs:
           name: miata-image
           path: ${{ steps.build.outputs.image-path }}
 
-  # release:
-  #   name: Create GitHub Release
-  #   needs: [build]
-  #   runs-on: ubuntu-latest
+  release:
+    name: Create GitHub Release
+    needs: [build]
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - uses: actions/checkout@v6
-  #       with:
-  #         ref: "main"
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: "main"
 
-  #     - uses: actions/download-artifact@v7
-  #       with:
-  #         name: miata-image
+      - uses: actions/download-artifact@v8
+        with:
+          name: miata-image
 
-  #     - name: Create GitHub Release
-  #       uses: softprops/action-gh-release@v2
-  #       with:
-  #         tag_name: ${{ startsWith(env.VERSION, 'v') && env.VERSION || format('v{0}', env.VERSION) }}
-  #         name: ${{ startsWith(env.VERSION, 'v') && env.VERSION || format('v{0}', env.VERSION) }}
-  #         generate_release_notes: true
-  #         overwrite_files: true
-  #         files: |
-  #           image.img.xz
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ startsWith(env.VERSION, 'v') && env.VERSION || format('v{0}', env.VERSION) }}
+          name: ${{ startsWith(env.VERSION, 'v') && env.VERSION || format('v{0}', env.VERSION) }}
+          generate_release_notes: true
+          overwrite_files: true
+          files: |
+            image*.img.xz
