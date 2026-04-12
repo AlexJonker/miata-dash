@@ -92,10 +92,6 @@ jobs:
           cp -r ./src/. custom-stage/01-customization/files/
           cp dash-arm64 custom-stage/01-customization/files/usr/local/bin/dash
 
-          mkdir -p /storage/music
-          chown -R driver:driver /storage
-          chown -R driver:driver /home/driver
-
           cat > custom-stage/01-customization/00-run.sh <<-'EOF'
           #!/bin/bash -e
           cp -rp files/* "${ROOTFS_DIR}/"
@@ -108,8 +104,13 @@ jobs:
               xserver-xorg xinit x11-xserver-utils libxkbcommon-x11-0 openbox \
               xserver-xorg-input-evdev xserver-xorg-input-libinput
 
-          chmod +x /usr/local/bin/dash
+          chown root:root /usr/local/bin/dash
+          chmod 755 /usr/local/bin/dash
           echo "root:root" | chpasswd
+
+          mkdir -p /storage/music
+          chown -R driver:driver /storage
+          chown -R driver:driver /home/driver
           EOF
 
           cat > custom-stage/prerun.sh <<-'EOF'
