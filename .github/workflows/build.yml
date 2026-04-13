@@ -2,22 +2,17 @@ name: Build and Release
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: "Version (e.g. 1.2.3 or v1.2.3)"
-        required: true
 
 permissions:
   contents: write
   actions: read
 
-env:
-  VERSION: ${{ github.event.inputs.version }}
-
 jobs:
   compile:
     name: Compile Dashboard
     runs-on: ubuntu-24.04-arm
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
 
     steps:
       - name: Checkout dash
@@ -30,6 +25,10 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libasound2-dev
+
+      - name: Get version
+        id: get_version
+        run: echo "version=$(grep '^version' dash/Cargo.toml | head -1 | sed 's/version = "\(.*\)"/\1/')" >> $GITHUB_OUTPUT
 
       - name: Build dashboard
         run: |
@@ -62,8 +61,8 @@ jobs:
       - name: Release dash binary
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: ${{ startsWith(env.VERSION, 'v') && env.VERSION || format('v{0}', env.VERSION) }}
-          name: ${{ startsWith(env.VERSION, 'v') && env.VERSION || format('v{0}', env.VERSION) }}
+          tag_name: ${{ format('v{0}', needs.compile.outputs.version) }}
+          name: ${{ format('v{0}', needs.compile.outputs.version) }}
           generate_release_notes: true
           files: |
             dash-arm64.xz
@@ -140,7 +139,7 @@ jobs:
           extra-host-modules: ""
           github-token: ${{ github.token }}
           hostname: miata
-          image-name: "miata-dash-${{ env.VERSION }}-arm64"
+          image-name: "miata-dash-${{ needs.compile.outputs.version }}-arm64"
           increase-runner-disk-size: true
           keyboard-keymap: us
           keyboard-layout: English (US)
@@ -170,7 +169,7 @@ jobs:
 
   release-image:
     name: Release RPi Image
-    needs: [build]
+    needs: [compile, build]
     runs-on: ubuntu-latest
 
     steps:
@@ -185,8 +184,8 @@ jobs:
       - name: Release arm64 image
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: ${{ startsWith(env.VERSION, 'v') && env.VERSION || format('v{0}', env.VERSION) }}
-          name: ${{ startsWith(env.VERSION, 'v') && env.VERSION || format('v{0}', env.VERSION) }}
+          tag_name: ${{ format('v{0}', needs.compile.outputs.version) }}
+          name: ${{ format('v{0}', needs.compile.outputs.version) }}
           overwrite_files: true
           files: |
             image*.img.xz
