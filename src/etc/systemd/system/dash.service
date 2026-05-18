@@ -5,6 +5,7 @@ Wants=systemd-udev-settle.service
 
 [Service]
 User=driver
+# https://docs.slint.dev/latest/docs/slint/guide/backends-and-renderers/backend_linuxkms/
 Environment=SLINT_BACKEND=linuxkms-software
 ExecStart=/usr/local/bin/dash
 Restart=on-failure
