@@ -31,16 +31,10 @@ export component PlayerWindow inherits AppWindow {
                 background: #1e1e2e;
                 border-radius: 16px;
 
-                VerticalLayout {
-                    alignment: center;
-                    HorizontalLayout {
-                        alignment: center;
-                        Image {
-                            source: @image-url("../../assets/icons/music.svg");
-                            width: 100px;
-                            height: 100px;
-                        }
-                    }
+                Image {
+                    source: @image-url("../../assets/icons/music.svg");
+                    width: 100px;
+                    height: 100px;
                 }
             }
         }
@@ -56,6 +50,7 @@ export component PlayerWindow inherits AppWindow {
                 horizontal-alignment: center;
                 overflow: elide;
             }
+
             Text {
                 text: root.artist-name;
                 font-size: 16px;
@@ -63,6 +58,7 @@ export component PlayerWindow inherits AppWindow {
                 horizontal-alignment: center;
                 overflow: elide;
             }
+
             Text {
                 text: root.album-name;
                 font-size: 14px;
@@ -77,7 +73,9 @@ export component PlayerWindow inherits AppWindow {
             alignment: center;
 
             TouchArea {
-                clicked => { root.previous-track(); }
+                clicked => {
+                    root.previous-track();
+                }
                 Image {
                     source: @image-url("../../assets/icons/previous.svg");
                     width: 36px;
@@ -86,29 +84,29 @@ export component PlayerWindow inherits AppWindow {
             }
 
             TouchArea {
-                clicked => { root.play-pause(); }
+                clicked => {
+                    root.play-pause();
+                }
+                width: 64px;
+                height: 64px;
                 Rectangle {
                     width: 64px;
                     height: 64px;
                     border-radius: 32px;
                     background: #1db954;
 
-                    VerticalLayout {
-                        alignment: center;
-                        HorizontalLayout {
-                            alignment: center;
-                            Image {
-                                source: root.is-playing ? @image-url("../../assets/icons/pause.svg") : @image-url("../../assets/icons/play.svg");
-                                width: 28px;
-                                height: 28px;
-                            }
-                        }
+                    Image {
+                        source: root.is-playing ? @image-url("../../assets/icons/pause.svg") : @image-url("../../assets/icons/play.svg");
+                        width: 28px;
+                        height: 28px;
                     }
                 }
             }
 
             TouchArea {
-                clicked => { root.next-track(); }
+                clicked => {
+                    root.next-track();
+                }
                 Image {
                     source: @image-url("../../assets/icons/next.svg");
                     width: 36px;
@@ -122,7 +120,9 @@ export component PlayerWindow inherits AppWindow {
             alignment: center;
 
             TouchArea {
-                clicked => { root.toggle-loop(); }
+                clicked => {
+                    root.toggle-loop();
+                }
                 Image {
                     source: root.is-loop-enabled ? @image-url("../../assets/icons/loop_enabled.svg") : @image-url("../../assets/icons/loop_disabled.svg");
                     width: 28px;
@@ -132,7 +132,9 @@ export component PlayerWindow inherits AppWindow {
             }
 
             TouchArea {
-                clicked => { root.toggle-shuffle(); }
+                clicked => {
+                    root.toggle-shuffle();
+                }
                 Image {
                     source: root.is-shuffle-enabled ? @image-url("../../assets/icons/shuffle_enabled.svg") : @image-url("../../assets/icons/shuffle_disabled.svg");
                     width: 28px;
