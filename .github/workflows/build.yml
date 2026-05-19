@@ -106,10 +106,9 @@ jobs:
           usermod -aG video,input,render driver
 
           mkdir -p /storage/music
-          chown -R driver:driver /storage
-          chown -R driver:driver /home/driver
+          chmod -R 777 /storage
 
-          systemctl enable dash.service
+          systemctl enable startup.service
           sudo systemctl mask getty@tty1.service
           EOF
 
