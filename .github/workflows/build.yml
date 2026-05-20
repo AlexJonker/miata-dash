@@ -94,12 +94,6 @@ jobs:
           ref: "main"
 
       - uses: actions/download-artifact@v7
-        with:
-          name: rusty-dash-binary-arm64
-
-      - uses: actions/download-artifact@v7
-        with:
-          name: rusty-dash-binary-amd64
 
       - name: Release dash binary
         uses: softprops/action-gh-release@v3
