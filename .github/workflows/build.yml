@@ -94,6 +94,12 @@ jobs:
           ref: "main"
 
       - uses: actions/download-artifact@v8
+        with:
+          name: rusty-dash-binary-arm64
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: rusty-dash-binary-amd64
 
       - name: Release dash binary
         uses: softprops/action-gh-release@v3
@@ -106,7 +112,7 @@ jobs:
             rusty-dash-amd64.xz
   build-pi-image:
     name: Build RPi Image
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     needs: [get-version, compile-arm64]
 
     steps:
@@ -176,7 +182,7 @@ jobs:
           github-token: ${{ github.token }}
           hostname: shitbox
           image-name: "rusty-dash-${{ needs.get-version.outputs.version }}-arm64"
-          increase-runner-disk-size: true
+          increase-runner-disk-size: false
           keyboard-keymap: us
           keyboard-layout: English (US)
           locale: en_US.UTF-8
