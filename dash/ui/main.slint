@@ -1,2 +1,127 @@
-// Add all slint files to this file.
-export { PlayerWindow } from "music/player.slint";
+import { HomePage, MusicPage, SettingsPage } from "./pages/pages.slint";
+
+component NavItem inherits Rectangle {
+    in property <string> text;
+    in property <bool> selected;
+
+    callback clicked;
+
+    height: 24px;
+    background: #760000;
+
+    Text {
+        text: root.text;
+        color: root.selected ? #ffffff : #808080;
+        font-size: 12px;
+    }
+
+    TouchArea {
+        clicked => {
+            root.clicked();
+        }
+    }
+}
+
+export component AppWindow inherits Window {
+    title: "Rusty Dash";
+    full-screen: true;
+
+    background: #121212;
+
+    in-out property <int> current-page: 0;
+
+    in-out property <bool> is-playing: false;
+    in-out property <bool> is-loop-enabled: false;
+    in-out property <bool> is-shuffle-enabled: false;
+
+    in-out property <string> track-title: "Title";
+    in-out property <string> artist-name: "Artist";
+    in-out property <string> album-name: "Album";
+
+    callback play-pause();
+    callback next-track();
+    callback previous-track();
+    callback toggle-loop();
+    callback toggle-shuffle();
+
+    VerticalLayout {
+        padding-top: 4px;
+        padding-bottom: 4px;
+        padding-left: 4px;
+        padding-right: 4px;
+        spacing: 4px;
+
+        HorizontalLayout {
+            NavItem {
+                text: "Home";
+                selected: root.current-page == 0;
+                clicked => {
+                    root.current-page = 0;
+                }
+            }
+
+            NavItem {
+                text: "Music";
+                selected: root.current-page == 1;
+                clicked => {
+                    root.current-page = 1;
+                }
+            }
+
+            NavItem {
+                text: "Settings";
+                selected: root.current-page == 2;
+                clicked => {
+                    root.current-page = 2;
+                }
+            }
+        }
+
+        Rectangle {
+            horizontal-stretch: 1;
+            vertical-stretch: 1;
+
+            if root.current-page == 0: HomePage {
+                x: 0px;
+                y: 0px;
+                width: parent.width;
+                height: parent.height;
+            }
+
+            if root.current-page == 1: MusicPage {
+                x: 0px;
+                y: 0px;
+                width: parent.width;
+                height: parent.height;
+                is-playing: root.is-playing;
+                is-loop-enabled: root.is-loop-enabled;
+                is-shuffle-enabled: root.is-shuffle-enabled;
+                track-title: root.track-title;
+                artist-name: root.artist-name;
+                album-name: root.album-name;
+                play-pause => {
+                    root.play-pause();
+                }
+                next-track => {
+                    root.next-track();
+                }
+                previous-track => {
+                    root.previous-track();
+                }
+                toggle-loop => {
+                    root.toggle-loop();
+                }
+                toggle-shuffle => {
+                    root.toggle-shuffle();
+                }
+            }
+
+            if root.current-page == 2: SettingsPage {
+                x: 0px;
+                y: 0px;
+                width: parent.width;
+                height: parent.height;
+            }
+        }
+    }
+}

@@ -4,9 +4,9 @@ version = "0.0.6"
 edition = "2024"
 
 [dependencies]
-slint = { version = "1.16.1", features = ["backend-linuxkms"]}
+slint = { version = "1.16.1", features = ["backend-linuxkms"] }
 # android-auto = {version = "0.3.7", features = ["usb","wireless"] }
-android-auto = {version = "0.3.8", features = ["usb"] }
+android-auto = { version = "0.3.8", features = ["usb"] }
 
 [build-dependencies]
 slint-build = "1.16.1"

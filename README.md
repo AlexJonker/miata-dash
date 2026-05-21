@@ -8,13 +8,13 @@
   I am running this on a pi3 with a 7 inch touchscreen.
 </p>
 
-
-
 ## Installation
+
 1. Download the latest image from [the release page](https://github.com/AlexJonker/miata-dash/releases/latest)
 2. Flash the downloaded file with raspberry pi imager.
 
 ## Information
+
 Root password is `root`
 
 User is called `driver` and password is `driver`

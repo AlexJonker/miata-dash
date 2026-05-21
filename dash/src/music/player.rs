@@ -1,6 +1,6 @@
 use slint::ComponentHandle;
 
-pub fn setup(ui: &crate::PlayerWindow) {
+pub fn setup(ui: &crate::AppWindow) {
     let ui_handle = ui.as_weak();
     ui.on_play_pause(move || {
         let ui = ui_handle.unwrap();

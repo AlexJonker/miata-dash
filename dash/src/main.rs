@@ -5,7 +5,7 @@ use std::error::Error;
 slint::include_modules!();
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let ui = PlayerWindow::new()?;
+    let ui = AppWindow::new()?;
 
     music::player::setup(&ui);
 
