@@ -1,4 +1,4 @@
-import { HomePage, MusicPage, SettingsPage } from "./pages/pages.slint";
+import { HomePage, MusicPage, SettingsPage, AndroidAutoPage } from "./pages/pages.slint";
 
 component NavItem inherits Rectangle {
     in property <string> text;
@@ -73,6 +73,14 @@ export component AppWindow inherits Window {
                     root.current-page = 2;
                 }
             }
+
+            NavItem {
+                text: "Android Auto";
+                selected: root.current-page == 3;
+                clicked => {
+                    root.current-page = 3;
+                }
+            }
         }
 
         Rectangle {
@@ -108,6 +116,9 @@ export component AppWindow inherits Window {
                 shutdown => {
                     root.shutdown();
                 }
+            }
+
+            if root.current-page == 3: AndroidAutoPage {
             }
         }
     }
