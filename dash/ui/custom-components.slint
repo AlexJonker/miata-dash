@@ -1,0 +1,17 @@
+ export component Button inherits Rectangle {
+    in-out property text <=> txt.text;
+    in-out property font-size <=> txt.font-size;
+    in-out property text-color <=> txt.color;
+    in-out property <color> background-color: red;
+    in-out property <color> background-color-pressed: blue;
+    in-out property <color> background-color-hover: green;
+    callback clicked <=> touch.clicked;
+
+    border-radius: 6px;
+    background: touch.pressed ? background-color-pressed : touch.has-hover ? background-color-hover : background-color;
+    height: txt.preferred-height * 1.5;
+
+    txt := Text { }
+
+    touch := TouchArea { }
+}
