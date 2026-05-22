@@ -1,4 +1,5 @@
 use std::error::Error;
+use system_shutdown::shutdown;
 
 slint::include_modules!();
 
@@ -25,11 +26,9 @@ fn main() -> Result<(), Box<dyn Error>> {
         ui.set_is_shuffle_enabled(!ui.get_is_shuffle_enabled());
     });
 
-    let window_weak = ui.as_weak();
-    ui.on_quit(move || {
-        let window = window_weak.unwrap();
-        // Hide the window to terminate the slint run loop
-        window.window().hide().unwrap();
+    ui.on_shutdown(move || match shutdown() {
+        Ok(_) => println!("Shutting down, bye!"),
+        Err(error) => eprintln!("Failed to shut down: {}", error),
     });
 
     ui.run()?;

@@ -2,7 +2,7 @@ import { VerticalBox } from "std-widgets.slint";
 import { Button, Divider } from "../custom-components.slint";
 
 export component SettingsPage inherits VerticalLayout {
-    callback quit();
+    callback shutdown();
 
     alignment: center;
 
@@ -29,11 +29,11 @@ export component SettingsPage inherits VerticalLayout {
             }
 
             Button {
-                text: "Quit";
+                text: "Shutdown";
                 height: 40px;
                 font-size: 16px;
                 clicked => {
-                    quit();
+                    shutdown();
                 }
             }
         }
