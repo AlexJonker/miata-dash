@@ -1,7 +1,7 @@
 import { HomePage } from "./pages/home.slint";
 import { MusicPage } from "./pages/music.slint";
-import { SettingsPage } from "./pages/settings.slint";
 import { AndroidAutoPage } from "./pages/android_auto.slint";
+import { SettingsPage } from "./pages/settings.slint";
 
 component NavItem inherits Rectangle {
     in property <string> text;
@@ -70,7 +70,7 @@ export component AppWindow inherits Window {
             }
 
             NavItem {
-                text: "Settings";
+                text: "Android Auto";
                 selected: root.current-page == 2;
                 clicked => {
                     root.current-page = 2;
@@ -78,7 +78,7 @@ export component AppWindow inherits Window {
             }
 
             NavItem {
-                text: "Android Auto";
+                text: "Settings";
                 selected: root.current-page == 3;
                 clicked => {
                     root.current-page = 3;
@@ -115,13 +115,12 @@ export component AppWindow inherits Window {
                 }
             }
 
-            if root.current-page == 2: SettingsPage {
+            if root.current-page == 2: AndroidAutoPage { }
+
+            if root.current-page == 3: SettingsPage {
                 shutdown => {
                     root.shutdown();
                 }
-            }
-
-            if root.current-page == 3: AndroidAutoPage {
             }
         }
     }
