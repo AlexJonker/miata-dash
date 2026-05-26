@@ -4,14 +4,33 @@
     in-out property text-color <=> txt.color;
     in-out property <color> background-color: #c20000;
     in-out property <color> background-color-pressed: #e10000;
-    in-out property <color> background-color-hover: #980202;
     callback clicked <=> touch.clicked;
 
     border-radius: 6px;
-    background: touch.pressed ? background-color-pressed : touch.has-hover ? background-color-hover : background-color;
-    height: txt.preferred-height * 1.5;
+    background: touch.pressed ? background-color-pressed : background-color;
+    height: 40px;
 
-    txt := Text { }
+    txt := Text {
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    touch := TouchArea { }
+}
+
+ export component ImageButton inherits Rectangle {
+    callback clicked <=> touch.clicked;
+    in-out property image <=> img.source;
+    in-out property image-color <=> img.colorize;
+    in-out property image-width <=> img.width;
+    in-out property image-height <=> img.height;
+
+    img := Image {
+        source: @image-url("../assets/icons/home.svg");
+        colorize: #ffffff;
+        width: 25px;
+        height: 25px;
+    }
 
     touch := TouchArea { }
 }
