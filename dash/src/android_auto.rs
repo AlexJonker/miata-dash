@@ -1,11 +1,16 @@
 // Copied from https://github.com/uglyoldbob/android-auto/
-use ringbuf::traits::Producer;
-use std::{collections::HashSet, sync::Arc, time::Duration};
-use tokio::sync::Mutex;
-
-use android_auto::{HeadUnitInfo, VideoConfiguration};
+use android_auto::{AndroidAutoMainTrait, HeadUnitInfo, VideoConfiguration};
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
+use openh264::formats::YUVSource;
+use ringbuf::traits::Producer;
 use slint::ComponentHandle;
+use std::{
+    collections::HashSet,
+    sync::Arc,
+    sync::atomic::{AtomicBool, Ordering},
+    time::Duration,
+};
+use tokio::sync::Mutex;
 
 use crate::AppWindow;
 
@@ -377,7 +382,6 @@ impl AndroidAuto {
     ) -> Result<(), String> {
         let mut joinset = tokio::task::JoinSet::new();
         let relay = self.inner.lock().await.relay.take();
-        use android_auto::AndroidAutoMainTrait;
         let result = Box::new(self).run(config, &mut joinset, &setup).await;
         joinset.join_all().await;
         relay.map(|r| r.abort());
@@ -456,17 +460,24 @@ impl Drop for AndroidAutoContainer {
 
 pub struct AndroidAutoHandle {
     thread: Option<std::thread::JoinHandle<()>>,
+    should_exit: Arc<AtomicBool>,
 }
 
 impl AndroidAutoHandle {
     pub fn start(ui: &AppWindow) -> Self {
         let ui_weak = ui.as_weak();
         let setup = android_auto::setup();
+        let should_exit = Arc::new(AtomicBool::new(false));
+        let should_exit_clone = should_exit.clone();
+
         let thread = std::thread::spawn(move || {
             let mut decoder = openh264::decoder::Decoder::new().unwrap();
             let mut container = AndroidAutoContainer::new(setup);
 
             loop {
+                if should_exit_clone.load(Ordering::SeqCst) {
+                    break;
+                }
                 match container.recv.try_recv() {
                     Ok(MessageFromAsync::ExitContainer) => {
                         container = AndroidAutoContainer::new(setup);
@@ -491,12 +502,14 @@ impl AndroidAutoHandle {
 
         Self {
             thread: Some(thread),
+            should_exit,
         }
     }
 }
 
 impl Drop for AndroidAutoHandle {
     fn drop(&mut self) {
+        self.should_exit.store(true, Ordering::SeqCst);
         if let Some(thread) = self.thread.take() {
             let _ = thread.join();
         }
@@ -514,7 +527,6 @@ fn update_frame_from_video(
             Err(e) => log::error!("Failed to decode android auto video {:?}", e),
             Ok(None) => {}
             Ok(Some(image)) => {
-                use openh264::formats::YUVSource;
                 let mut rgb_raw = vec![0; image.rgb8_len()];
                 image.write_rgb8(&mut rgb_raw);
                 let (w, h) = image.dimensions_uv();
