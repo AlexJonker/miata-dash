@@ -11,7 +11,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         .init()
         .ok();
     let ui = AppWindow::new()?;
-    let _android_auto: android_auto::AndroidAutoHandle = android_auto::AndroidAutoHandle::start(&ui);
+    let _android_auto: android_auto::AndroidAutoHandle =
+        android_auto::AndroidAutoHandle::start(&ui);
 
     use slint::ComponentHandle;
 
