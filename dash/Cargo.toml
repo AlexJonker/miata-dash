@@ -4,19 +4,19 @@ version = "0.0.9"
 edition = "2024"
 
 [dependencies]
-slint = { version = "1.16.1", features = ["backend-linuxkms"] }
+slint = { git = "https://github.com/slint-ui/slint", features = ["backend-linuxkms"] }
 android-auto = { version = "0.3.8", features = ["usb"] }
-system_shutdown = "4.1.0"
-ringbuf = "0.5.0"
-tokio = "1.52.3"
-cpal = "0.17.3"
-openh264 = "0.9.3"
-log = "0.4.30"
-simple_logger = "5.2.0"
-async-trait = "0.1.89"
+system_shutdown = "*"
+ringbuf = "*"
+tokio = { version = "*", features = ["full"] }
+cpal = "*"
+openh264 = "*"
+log = "*"
+simple_logger = "*"
+async-trait = "*"
 
 [build-dependencies]
-slint-build = "1.16.1"
+slint-build = { git = "https://github.com/slint-ui/slint" }
 
 # This patch is needed for the v1 certificate in android-auto's src/cert.rs
 [patch.crates-io]
