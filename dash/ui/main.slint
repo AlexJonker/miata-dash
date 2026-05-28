@@ -60,6 +60,7 @@ export component AppWindow inherits Window {
 
     callback shutdown();
     callback reboot();
+    callback handle_android_auto_touch(int, int, int);
 
     title: "Rusty Dash";
     // width: 800px;
@@ -142,6 +143,9 @@ export component AppWindow inherits Window {
 
             if root.current-page == 2: AndroidAutoPage {
                 android-auto-frame: root.android-auto-frame;
+                handle_touch(x, y, action) => {
+                    root.handle_android_auto_touch(x, y, action);
+                }
             }
 
             if root.current-page == 3: SettingsPage {

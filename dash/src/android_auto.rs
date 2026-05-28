@@ -457,6 +457,17 @@ impl Drop for AndroidAutoContainer {
 pub struct AndroidAutoHandle {
     thread: Option<std::thread::JoinHandle<()>>,
     should_exit: Arc<AtomicBool>,
+    send: tokio::sync::mpsc::Sender<MessageToAsync>,
+}
+
+impl Clone for AndroidAutoHandle {
+    fn clone(&self) -> Self {
+        Self {
+            thread: None,
+            should_exit: self.should_exit.clone(),
+            send: self.send.clone(),
+        }
+    }
 }
 
 impl AndroidAutoHandle {
@@ -466,9 +477,11 @@ impl AndroidAutoHandle {
         let should_exit = Arc::new(AtomicBool::new(false));
         let should_exit_clone = should_exit.clone();
 
+        let mut container = AndroidAutoContainer::new(setup);
+        let send = container.send.clone();
+
         let thread = std::thread::spawn(move || {
             let mut decoder = openh264::decoder::Decoder::new().unwrap();
-            let mut container = AndroidAutoContainer::new(setup);
 
             loop {
                 if should_exit_clone.load(Ordering::SeqCst) {
@@ -499,6 +512,41 @@ impl AndroidAutoHandle {
         Self {
             thread: Some(thread),
             should_exit,
+            send,
+        }
+    }
+
+    pub fn send_touch_event(&self, x: i32, y: i32, action: i32) {
+        let mut i_event = android_auto::Wifi::InputEventIndication::new();
+        let timestamp = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_micros() as u64;
+        i_event.set_timestamp(timestamp);
+
+        let mut te = android_auto::Wifi::TouchEvent::new();
+        let mut tl = android_auto::Wifi::TouchLocation::new();
+        tl.set_x(x as u32);
+        tl.set_y(y as u32);
+        tl.set_pointer_id(0);
+        te.touch_location.push(tl);
+
+        te.set_touch_action(match action {
+            2 => android_auto::Wifi::touch_action::Enum::DRAG,
+            5 => android_auto::Wifi::touch_action::Enum::POINTER_DOWN,
+            6 => android_auto::Wifi::touch_action::Enum::POINTER_UP,
+            _ => android_auto::Wifi::touch_action::Enum::POINTER_DOWN,
+        });
+
+        i_event.touch_event = android_auto::protobuf::MessageField::some(te);
+
+        let msg = android_auto::AndroidAutoMessage::Input(i_event);
+
+        if let Err(e) = self
+            .send
+            .try_send(MessageToAsync::AndroidAutoMessage(msg.sendable()))
+        {
+            log::error!("Failed to send touch event: {e:?}");
         }
     }
 }

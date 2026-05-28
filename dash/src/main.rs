@@ -15,6 +15,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     let _android_auto: android_auto::AndroidAutoHandle =
         android_auto::AndroidAutoHandle::start(&ui);
 
+    let android_auto_handle = _android_auto.clone();
+    ui.on_handle_android_auto_touch(move |x, y, action| {
+        android_auto_handle.send_touch_event(x, y, action);
+    });
+
     let ui_handle = ui.as_weak();
     ui.on_play_pause(move || {
         let ui = ui_handle.unwrap();

@@ -1,5 +1,7 @@
 export component AndroidAutoPage inherits Rectangle {
     in-out property <image> android-auto-frame;
+    callback handle_touch(int, int, int);
+    private property <bool> pressed: false;
 
     VerticalLayout {
         alignment: center;
@@ -13,9 +15,35 @@ export component AndroidAutoPage inherits Rectangle {
         }
     }
 
-    Image {
-        source: root.android-auto-frame;
-        width: parent.width;
-        height: parent.height;
+    TouchArea {
+        pointer-event(details) => {
+            if (details.kind == PointerEventKind.down) {
+                root.pressed = true;
+                root.handle_touch(
+                    (self.mouse-x / 1px) * 800 / max(1, self.width / 1px),
+                    (self.mouse-y / 1px) * 480 / max(1, self.height / 1px),
+                    5);
+            } else if (details.kind == PointerEventKind.move) {
+                if (root.pressed) {
+                    root.handle_touch(
+                        (self.mouse-x / 1px) * 800 / max(1, self.width / 1px),
+                        (self.mouse-y / 1px) * 480 / max(1, self.height / 1px),
+                        2);
+                }
+            } else if (details.kind == PointerEventKind.up) {
+                root.pressed = false;
+                root.handle_touch(
+                    (self.mouse-x / 1px) * 800 / max(1, self.width / 1px),
+                    (self.mouse-y / 1px) * 480 / max(1, self.height / 1px),
+                    6);
+            } else if (details.kind == PointerEventKind.cancel) {
+                root.pressed = false;
+            }
+        }
+        Image {
+            source: root.android-auto-frame;
+            width: parent.width;
+            height: parent.height;
+        }
     }
 }
