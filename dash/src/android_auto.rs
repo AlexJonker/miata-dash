@@ -454,13 +454,13 @@ impl Drop for AndroidAutoContainer {
     }
 }
 
-pub struct AndroidAutoHandle {
+pub struct AndroidAutoController {
     thread: Option<std::thread::JoinHandle<()>>,
     should_exit: Arc<AtomicBool>,
     send: tokio::sync::mpsc::Sender<MessageToAsync>,
 }
 
-impl Clone for AndroidAutoHandle {
+impl Clone for AndroidAutoController {
     fn clone(&self) -> Self {
         Self {
             thread: None,
@@ -470,8 +470,8 @@ impl Clone for AndroidAutoHandle {
     }
 }
 
-impl AndroidAutoHandle {
-    pub fn start(ui: &AppWindow) -> Self {
+impl AndroidAutoController {
+    pub fn new(ui: &AppWindow) -> Self {
         let ui_weak = ui.as_weak();
         let setup = android_auto::setup();
         let should_exit = Arc::new(AtomicBool::new(false));
@@ -509,11 +509,18 @@ impl AndroidAutoHandle {
             }
         });
 
-        Self {
+        let handle = Self {
             thread: Some(thread),
             should_exit,
             send,
-        }
+        };
+
+        let handle_clone = handle.clone();
+        ui.on_handle_android_auto_touch(move |x, y, action| {
+            handle_clone.send_touch_event(x, y, action);
+        });
+
+        handle
     }
 
     pub fn send_touch_event(&self, x: i32, y: i32, action: i32) {
@@ -551,7 +558,7 @@ impl AndroidAutoHandle {
     }
 }
 
-impl Drop for AndroidAutoHandle {
+impl Drop for AndroidAutoController {
     fn drop(&mut self) {
         self.should_exit.store(true, Ordering::SeqCst);
         if let Some(thread) = self.thread.take() {
