@@ -63,6 +63,8 @@ export component AppWindow inherits Window {
     callback toggle-shuffle();
     callback set-progress(float);
 
+    in-out property <string> app-version: "Unknown";
+
     callback shutdown();
     callback reboot();
     callback handle_android_auto_touch(int, int, int);
@@ -162,6 +164,7 @@ export component AppWindow inherits Window {
             }
 
             if root.current-page == 3: SettingsPage {
+                app-version: root.app-version;
                 shutdown => {
                     root.shutdown();
                 }

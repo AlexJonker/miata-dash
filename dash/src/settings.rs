@@ -4,6 +4,8 @@ pub struct SettingsController;
 
 impl SettingsController {
     pub fn new(ui: &AppWindow) -> Self {
+        ui.set_app_version(env!("CARGO_PKG_VERSION").into());
+
         ui.on_shutdown(move || match system_shutdown::shutdown() {
             Ok(()) => println!("Shutting down, bye!"),
             Err(error) => eprintln!("Failed to shut down: {error}"),
