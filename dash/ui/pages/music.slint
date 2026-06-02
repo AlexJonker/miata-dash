@@ -97,6 +97,10 @@ export component MusicPage inherits VerticalLayout {
                 moved => {
                     root.set-progress(self.mouse-x / self.width);
                 }
+                clicked => {
+                    root.set-progress(self.mouse-x / self.width);
+                }
+
             }
         }
 
